@@ -250,7 +250,10 @@ public class RaftNode {
         }
 
         RaftProto.AppendEntriesRequest request = requestBuilder.build();
-        RaftProto.AppendEntriesResponse response = peer.getRaftConsensusServiceAsync().appendEntries(request);
+        RaftProto.AppendEntriesResponse response = null;
+        synchronized (peer) {
+            response = peer.getRaftConsensusServiceAsync().appendEntries(request);
+        }
 
         lock.lock();
         try {
